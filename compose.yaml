@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${BANCO}
+      POSTGRES_USER: ${BANCO_USER}
+      POSTGRES_PASSWORD: ${BANCO_SENHA}
+    ports:
+      - "5432:5432"
