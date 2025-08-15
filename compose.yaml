@@ -1,9 +1,58 @@
 services:
   postgres:
     image: postgres:15
+    container_name: biblioteca-postgres
     environment:
       POSTGRES_DB: ${BANCO}
       POSTGRES_USER: ${BANCO_USER}
       POSTGRES_PASSWORD: ${BANCO_SENHA}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - biblioteca-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${BANCO_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: biblioteca-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${BANCO}
+      - SPRING_DATASOURCE_USERNAME=${BANCO_USER}
+      - SPRING_DATASOURCE_PASSWORD=${BANCO_SENHA}
+    ports:
+      - "${BACK_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - biblioteca-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend/biblioteca
+      dockerfile: Dockerfile
+    container_name: biblioteca
+    ports:
+      - "${FRONT_PORT:-4200}:80"
+    depends_on:
+      - backend
+    networks:
+      - biblioteca-network
+    restart: unless-stopped
+
+networks:
+  biblioteca-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
