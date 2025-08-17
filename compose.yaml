@@ -17,6 +17,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
 
   backend:
     build:
@@ -39,16 +40,18 @@ services:
 
   frontend:
     build:
-      context: ./frontend/biblioteca
+      context: ./frontend
       dockerfile: Dockerfile
-    container_name: biblioteca
+    container_name: biblioteca-frontend
     ports:
-      - "${FRONT_PORT:-4200}:80"
+      - "${FRONT_PORT:-3000}:3000"
     depends_on:
       - backend
     networks:
       - biblioteca-network
     restart: unless-stopped
+    environment:
+      - NODE_ENV=production
 
 networks:
   biblioteca-network:

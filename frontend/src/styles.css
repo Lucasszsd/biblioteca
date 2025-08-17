@@ -1,0 +1,44 @@
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn {
+  border-radius: 0.375rem;
+}
+
+.form-control, .form-select {
+  border-radius: 0.375rem;
+}
+
+.table {
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.badge {
+  font-size: 0.75em;
+}
+
+.modal-content {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+
+
